@@ -43,7 +43,7 @@ public sealed class ObjectManager : MonoBehaviour {
 	[SerializeField]
 	public Camera CAMERA_ROOT;
 
-	public int LIMIT = 700;             // キャラクタ表示総数.
+	public int LIMIT = 70;             // キャラクタ表示総数.
 
 	public enum MODE    // 処理モード.
 	{

@@ -73,6 +73,7 @@ public class MainSceneCtrl : MonoBehaviour
         MANAGE = GameObject.Find("root_game").GetComponent<ObjectManager>();
         ROOT_START.gameObject.SetActive(false);
         OBJ_PLAYER.gameObject.SetActive(false);
+        INP_COPY.gameObject.SetActive(false);
         while (MANAGE.SW_BOOT == false)
         {
 

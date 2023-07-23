@@ -149,9 +149,6 @@ public class ObjectCtrl : MonoBehaviour
 				{
 					this.transform.localPosition = new Vector3(0, 0, 0);
 					
-					MainHit.enabled = true;
-					MainHit2.enabled = true;
-					MainHit3.enabled = true;
 					MainHit.GetComponent<HitName>().PARTS = "hand_just";
 					MainHit2.GetComponent<HitName>().PARTS = "hand_good";
 					MainHit3.GetComponent<HitName>().PARTS = "hand_noise";
@@ -160,6 +157,9 @@ public class ObjectCtrl : MonoBehaviour
 
 
 				}
+				MainHit.enabled = true;
+				MainHit2.enabled = true;
+				MainHit3.enabled = true;
 				param[0] = 0;
 				Vector3 inp = new Vector3(0, 0, 0);
 				pos = this.transform.localPosition;
@@ -190,8 +190,6 @@ public class ObjectCtrl : MonoBehaviour
 					MainPic.enabled = true;
 					this.gameObject.GetComponent<HitName>().PARTS = "will_body";
 
-					MainHit.enabled = true;
-					MainHit2.enabled = true;
 					MainHit.GetComponent<HitName>().PARTS = "will_tkb_left";
 					MainHit2.GetComponent<HitName>().PARTS = "will_tkb_right";
 
@@ -203,6 +201,8 @@ public class ObjectCtrl : MonoBehaviour
 					power = 1;
 					LIFE = 1;
 				}
+				MainHit.enabled = true;
+				MainHit2.enabled = true;
 				pos = new Vector3(0, 0, 0.5f);
 				if (pos.z > 0)
 				{
@@ -242,8 +242,6 @@ public class ObjectCtrl : MonoBehaviour
 					obj_mode = ObjectManager.MODE.HIT;
 					MainPic.sprite = MANAGE.SPR_ENEMY[1];
 					MainPic.enabled = true;
-					MainHit.enabled = false;
-					MainHit2.enabled = false;
 					this.gameObject.GetComponent<HitName>().PARTS = "tonari_niki";
 					MainHit.radius = 0.4f;
 					NOHIT = false;
@@ -253,6 +251,7 @@ public class ObjectCtrl : MonoBehaviour
 					LIFE = 1;
 					param[0] = 0;
 				}
+				MainHit.enabled = true;
 				pos = new Vector3(0, 0, 0.5f);
 				if (pos.z > 0)
 				{
@@ -293,8 +292,6 @@ public class ObjectCtrl : MonoBehaviour
 					obj_mode = ObjectManager.MODE.HIT;
 					MainPic.sprite = MANAGE.SPR_ENEMY[2];
 					MainPic.enabled = true;
-					MainHit.enabled = false;
-					MainHit2.enabled = false;
 					this.gameObject.GetComponent<HitName>().PARTS = "jack";
 					MainHit.enabled = true;
 					MainHit.radius = 0.4f;
@@ -305,6 +302,7 @@ public class ObjectCtrl : MonoBehaviour
 					LIFE = 1;
 					param[0] = 0;
 				}
+				MainHit.enabled = true;
 				pos = new Vector3(0, 0, 0.5f);
 				if (pos.z > 0)
 				{
