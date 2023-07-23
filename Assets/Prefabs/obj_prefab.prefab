@@ -10,13 +10,14 @@ GameObject:
   m_Component:
   - component: {fileID: 873378472340040880}
   - component: {fileID: 8528998844642498131}
+  - component: {fileID: 5630097881495662200}
   m_Layer: 0
   m_Name: hit_tkb1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &873378472340040880
 Transform:
   m_ObjectHideFlags: 0
@@ -45,6 +46,19 @@ SphereCollider:
   serializedVersion: 2
   m_Radius: 0.3
   m_Center: {x: 0.46, y: -0.87, z: 0}
+--- !u!114 &5630097881495662200
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2483881991755100410}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 26a76961e3e04d34dad7ab0cfdf4aea9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  PARTS: will_tkb_left
 --- !u!1 &2538452523529943811
 GameObject:
   m_ObjectHideFlags: 0
@@ -58,6 +72,7 @@ GameObject:
   - component: {fileID: 1972640694345346446}
   - component: {fileID: 2144879836365414762}
   - component: {fileID: 4675427428914301378}
+  - component: {fileID: 1601733641373892757}
   m_Layer: 0
   m_Name: obj_prefab
   m_TagString: Untagged
@@ -150,7 +165,11 @@ MonoBehaviour:
   MainPic: {fileID: 7867487160635832678}
   MainPos: {fileID: 8440912962634148305}
   MainHit: {fileID: 8528998844642498131}
+  TARGET: 
   MainHit2: {fileID: 2136063319946636695}
+  TARGET2: 
+  MainHit3: {fileID: 0}
+  TARGET_NOISE: 
   LIFE: 0
   NOHIT: 0
   speed: 0
@@ -200,6 +219,19 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 2.5, y: 2.5, z: 0.2}
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &1601733641373892757
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2538452523529943811}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 26a76961e3e04d34dad7ab0cfdf4aea9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  PARTS: will_body
 --- !u!1 &6232875347876359811
 GameObject:
   m_ObjectHideFlags: 0
@@ -210,13 +242,14 @@ GameObject:
   m_Component:
   - component: {fileID: 5553083948455123094}
   - component: {fileID: 2136063319946636695}
+  - component: {fileID: 4348940958267001558}
   m_Layer: 0
   m_Name: hit_tkb2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &5553083948455123094
 Transform:
   m_ObjectHideFlags: 0
@@ -245,3 +278,16 @@ SphereCollider:
   serializedVersion: 2
   m_Radius: 0.3
   m_Center: {x: -0.56, y: -0.85, z: 0}
+--- !u!114 &4348940958267001558
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6232875347876359811}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 26a76961e3e04d34dad7ab0cfdf4aea9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  PARTS: will_tkb_right

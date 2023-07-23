@@ -28,8 +28,16 @@ public class ObjectCtrl : MonoBehaviour
 	[SerializeField]
 	public SphereCollider MainHit;         // 当たり判定.
 	[SerializeField]
+	public string TARGET;
+	[SerializeField]
 	public SphereCollider MainHit2;
-	
+	[SerializeField]
+	public string TARGET2;
+	[SerializeField]
+	public CapsuleCollider MainHit3;    // ここだけ隣ニキの通電範囲
+	[SerializeField]
+	public string TARGET_NOISE;			// 範囲に入ると音が鳴る
+
 	[Space]
 
 	public int LIFE = 0;		// 耐久力.
@@ -78,10 +86,13 @@ public class ObjectCtrl : MonoBehaviour
 	MainSceneCtrl MAIN;
 	ObjectManager MANAGE;
 
+	public object Find { get; private set; }
+
 	void Awake()
 	{
 		MAIN = GameObject.Find("root_game").GetComponent<MainSceneCtrl>();
 		MANAGE = GameObject.Find("root_game").GetComponent<ObjectManager>();
+
 	}
 
 
@@ -114,14 +125,18 @@ public class ObjectCtrl : MonoBehaviour
 			case ObjectManager.MODE.NOUSE:
 				return;
 			case ObjectManager.MODE.INIT:
-				MainPic.enabled = true;
+				MainPic.enabled = false;
+				MainHit.enabled = false;
+				MainHit2.enabled = false;
 				count = 0;
 				break;
 			case ObjectManager.MODE.HIT:
 				MainHit.enabled = true;
+				MainHit2.enabled = true; 
 				break;
 			case ObjectManager.MODE.NOHIT:
 				MainHit.enabled = false;
+				MainHit2.enabled = false; 
 				break;
 			case ObjectManager.MODE.FINISH:
 				MANAGE.Return(this);
@@ -133,22 +148,32 @@ public class ObjectCtrl : MonoBehaviour
 				if (count == 0)
 				{
 					this.transform.localPosition = new Vector3(0, 0, 0);
+					
+					MainHit.enabled = true;
+					MainHit2.enabled = true;
+					MainHit3.enabled = true;
+					MainHit.GetComponent<HitName>().PARTS = "hand_just";
+					MainHit2.GetComponent<HitName>().PARTS = "hand_good";
+					MainHit3.GetComponent<HitName>().PARTS = "hand_noise";
+
+					MainPic.enabled = true;
+
 
 				}
+				param[0] = 0;
 				Vector3 inp = new Vector3(0, 0, 0);
 				pos = this.transform.localPosition;
 				inp.x = Input.GetAxis("Horizontal");
 				inp.y = Input.GetAxis("Vertical");
-				if (Mathf.Abs(pos.x + inp.x) > 16.0f)
+				if (Mathf.Abs(pos.x + inp.x) > 6.0f)
 				{
 					inp.x = 0.0f;
 				}
-				if (Mathf.Abs(pos.y + inp.y) > 8.0f)
+				if (Mathf.Abs(pos.y + inp.y) >2.0f)
 				{
 					inp.y = 0.0f;
 				}
 				this.transform.localPosition += inp;
-
 
 				break;
 
@@ -163,9 +188,15 @@ public class ObjectCtrl : MonoBehaviour
 					obj_mode = ObjectManager.MODE.HIT;
 					MainPic.sprite = MANAGE.SPR_ENEMY[0];
 					MainPic.enabled = true;
+					this.gameObject.GetComponent<HitName>().PARTS = "will_body";
+
 					MainHit.enabled = true;
 					MainHit2.enabled = true;
-					
+					MainHit.GetComponent<HitName>().PARTS = "will_tkb_left";
+					MainHit2.GetComponent<HitName>().PARTS = "will_tkb_right";
+
+					param[0] = 0;
+
 					NOHIT = false;
 					MainPic.color = COLOR_NORMAL;
 					MainPic.sortingOrder = 1;
@@ -173,11 +204,24 @@ public class ObjectCtrl : MonoBehaviour
 					LIFE = 1;
 				}
 				pos = new Vector3(0, 0, 0.5f);
-				if (pos.z > -3)
+				if (pos.z > 0)
 				{
-					pos.z = 0.13f;
+					pos.z = 0.15f;
 				}
 				this.transform.localPosition -= pos;
+
+				if (param[0] > 0)
+				{
+					if (((count >> 1) % 2) == 0)
+					{
+						MainPic.enabled = true;
+					}
+					else
+					{
+						MainPic.enabled = false;
+					}
+				}
+				
 				if (this.transform.localPosition.z<-9.0f)
 				{
 					MANAGE.Return(this);
@@ -187,44 +231,108 @@ public class ObjectCtrl : MonoBehaviour
 
 
 
-#if false
-/*
-			壁
-
+			/*
+			
 
 
 			*/
 			case ObjectManager.TYPE.TONARI_NIKI:
 				if (count == 0)
 				{
-					switch (mode)
-					{
-						case 0:
-							obj_mode = ObjectManager.MODE.HIT;
-							MainPic.sprite = MANAGE.SPR_WALL[0];
-							MainHit.enabled = true;
-							
-							NOHIT = false;
-							break;
-						case 1:
-							obj_mode = ObjectManager.MODE.NOHIT;
-							MainPic.sprite = MANAGE.SPR_WALL[1];
-							MainHit.enabled = false;
-							NOHIT = true;
-							break;
-					}
+					obj_mode = ObjectManager.MODE.HIT;
+					MainPic.sprite = MANAGE.SPR_ENEMY[1];
+					MainPic.enabled = true;
+					MainHit.enabled = false;
+					MainHit2.enabled = false;
+					this.gameObject.GetComponent<HitName>().PARTS = "tonari_niki";
+					MainHit.radius = 0.4f;
+					NOHIT = false;
 					MainPic.color = COLOR_NORMAL;
-					MainPic.sortingOrder = -1;
+					MainPic.sortingOrder = 1;
 					power = 1;
 					LIFE = 1;
+					param[0] = 0;
+				}
+				pos = new Vector3(0, 0, 0.5f);
+				if (pos.z > 0)
+				{
+					pos.z = 0.15f;
+				}
+				this.transform.localPosition -= pos;
+
+				if (param[0] > 0)
+				{
+					if (((count >> 1) % 2) == 0)
+					{
+						MainPic.enabled = true;
+					}
+					else
+					{
+						MainPic.enabled = false;
+					}
+				}
+
+				if (this.transform.localPosition.z < -9.0f)
+				{
+					MANAGE.Return(this);
 				}
 				break;
-#endif
 
 
 
-			/******************************************************
-			 * 
+
+
+			/*
+			
+
+
+			*/
+			case ObjectManager.TYPE.JACK:
+				if (count == 0)
+				{
+					obj_mode = ObjectManager.MODE.HIT;
+					MainPic.sprite = MANAGE.SPR_ENEMY[2];
+					MainPic.enabled = true;
+					MainHit.enabled = false;
+					MainHit2.enabled = false;
+					this.gameObject.GetComponent<HitName>().PARTS = "jack";
+					MainHit.enabled = true;
+					MainHit.radius = 0.4f;
+					NOHIT = false;
+					MainPic.color = COLOR_NORMAL;
+					MainPic.sortingOrder = 1;
+					power = 1;
+					LIFE = 1;
+					param[0] = 0;
+				}
+				pos = new Vector3(0, 0, 0.5f);
+				if (pos.z > 0)
+				{
+					pos.z = 0.15f;
+				}
+
+				if (param[0] > 0)
+				{
+					if (((count >> 1) % 2) == 0)
+					{
+						MainPic.enabled = true;
+					}
+					else
+					{
+						MainPic.enabled = false;
+					}
+				}
+
+				this.transform.localPosition -= pos;
+				if (this.transform.localPosition.z < -9.0f)
+				{
+					MANAGE.Return(this);
+				}
+				break;
+
+
+
+			/******************************************************** 
 			 * 
 			 * 
 			 * 
@@ -270,7 +378,126 @@ public class ObjectCtrl : MonoBehaviour
 	}
 
 
+	private void OnTriggerEnter(Collider other)
+	{
+		if (obj_mode == ObjectManager.MODE.NOHIT) return;
+		ObjectCtrl other_ctrl = other.gameObject.GetComponent<ObjectCtrl>();
+		string other_name = other.gameObject.GetComponent<HitName>().PARTS;
+		ObjectCtrl mine = this.gameObject.GetComponent<ObjectCtrl>();
+		string mine_name = this.gameObject.GetComponent<HitName>().PARTS;
+		if(mine_name==null)
+		{
+			mine_name = "null";
+		}
+		Debug.Log("mine_name=[" + mine_name + "] other_name=[" + other_name + "]");
+		switch(mine_name)
+		{
+			case "null":
+				return;
+			case "will_tkb_left":
+			case "will_tkb_right":
+				if (other_name == "tonari_niki")
+				{
+					return;
+				}
+				if (other_name == "jack")
+				{
+					return;
+				}
+				if (other_name == "will")
+				{
+					return;
+				}
+				if (other_ctrl.param[0]>0)
+				{
+					return;
+				}
+				
+				//if (other_name=="hand_just")
+				if (mine.param[0]>0)
+				{
+					SoundManager.Instance.PlaySE(0);
+					MAIN.player_sats -=100;
+				}
+				//if (other_name=="hand_good")
+				{
+					MAIN.player_sats -= 50;
+				}
+				if (other_name=="hand_noise")
+				{
+					SoundManager.Instance.PlaySE(4);
+				}
+				mine.param[0]++;
 
+				break;
+			case "tonari_niki":
+				if (mine.param[0] > 0)
+				{
+					mine.param[0]++;
+					SoundManager.Instance.PlaySE(4);
+				}
+				break;
+			case "jack":
+				//if(other_name=="hand_good")
+				if (mine.param[0] > 0)
+				{
+
+					SoundManager.Instance.PlaySE(Random.Range(1, 3));
+					MAIN.player_sats += 1137;
+					mine.param[0]++;
+
+				}
+				break;
+			case "will_body":
+				if (mine.param[0]>0)
+				{
+					mine.param[0]++;
+					MAIN.player_sats -= 100;
+				}
+				break;
+#if false
+
+			case "hand_just":
+				switch(other_name)
+				{
+					case "null":
+						return;
+					case "will_tkb_left":
+					case "will_tkb_right":
+						{
+							SoundManager.Instance.PlaySE(0);
+							MAIN.player_sats -= 500;
+						}
+						break;
+					case "tonari_niki":
+						break;
+				}
+				break;
+			case "hand_noise":
+				if (other_name == "will")
+				{
+					MAIN.player_sats -= 300;
+				}
+				else if (other_name== "jack")
+				{
+					SoundManager.Instance.PlaySE(Random.Range(1, 3));
+					MAIN.player_sats += 1137;
+				}
+				{
+					SoundManager.Instance.PlaySE(4);
+				}
+				break;
+			case "hand_good":
+				break;
+#endif
+		}
+	}
+
+
+
+
+
+#if false
 
 	/// <summary>
 	/// 当たり判定部・スプライト同士が衝突した時に走る
@@ -331,9 +558,9 @@ public class ObjectCtrl : MonoBehaviour
 				break;
 		}
 	}
+#endif
 
-
-#if true
+#if false
 	/// <summary>
 	/// 当たり判定部・スプライト同士が衝突した時に走る
 	/// </summary>

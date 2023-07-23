@@ -15,7 +15,7 @@ GameObject:
   m_TagString: SoundManager
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 2147483647
   m_IsActive: 1
 --- !u!4 &4455465352363009553
 Transform:
@@ -49,11 +49,12 @@ MonoBehaviour:
     Voice: 1
     SE: 1
     Mute: 0
-  BGM: []
-  SE:
+  BGM:
   - {fileID: 8300000, guid: 0154a54747c74594d81f3de90302e1be, type: 3}
+  SE:
   - {fileID: 8300000, guid: 908a93b67f680cb419e57339bb132111, type: 3}
   - {fileID: 8300000, guid: d8ec6c900f3790541ba264e3cd83aa35, type: 3}
   - {fileID: 8300000, guid: 069710c5cfd6d54449784707b56955e2, type: 3}
   - {fileID: 8300000, guid: 593a6ea967166ac47af781a93c553322, type: 3}
+  - {fileID: 8300000, guid: 0154a54747c74594d81f3de90302e1be, type: 3}
   Voice: []

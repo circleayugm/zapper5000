@@ -74,6 +74,7 @@ public sealed class ObjectManager : MonoBehaviour {
 	public int objectUsedMax = 0;
 
 	public bool SW_BOOT = false;		// 動作準備が整った時true
+#if false
 
 	public readonly int WATER_MAX = 1000;	// 水最大値
 	public int CNT_WATER = 500;				// 水ゲージ
@@ -82,7 +83,7 @@ public sealed class ObjectManager : MonoBehaviour {
 	public int CNT_FIRE = 30;				// 炎(固定)残り出現数
 	public int CNT_FIRE_REMAIN = 0;			// 炎(固定)倒した数
 	public int CNT_MOVEFIRE_REMAIN = 0;     // 動く炎の残り数
-
+#endif
 	float[] ang256 = new float[256];
 
 	void Awake()
