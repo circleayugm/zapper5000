@@ -26,6 +26,8 @@ public class ObjectCtrl : MonoBehaviour
 	[SerializeField]
 	public Transform MainPos;           // 座標・回転関連.
 	[SerializeField]
+	public BoxCollider BodyHit;			// ボディ当たり判定
+	[SerializeField]
 	public SphereCollider MainHit;         // 当たり判定.
 	[SerializeField]
 	public string TARGET;
@@ -165,16 +167,16 @@ public class ObjectCtrl : MonoBehaviour
 				pos = this.transform.localPosition;
 				inp.x = Input.GetAxis("Horizontal");
 				inp.y = Input.GetAxis("Vertical");
-				if (Mathf.Abs(pos.x + inp.x) > 6.0f)
+				if (Mathf.Abs(pos.x + inp.x) > 8.0f)
 				{
 					inp.x = 0.0f;
 				}
-				if (Mathf.Abs(pos.y + inp.y) >2.0f)
+				if (Mathf.Abs(pos.y + inp.y) > 2.5f)
 				{
 					inp.y = 0.0f;
 				}
 				this.transform.localPosition += inp;
-
+				//Debug.Log("hand_enableed=[" + MainHit.enabled + "]");
 				break;
 
 			/*
@@ -203,6 +205,7 @@ public class ObjectCtrl : MonoBehaviour
 				}
 				MainHit.enabled = true;
 				MainHit2.enabled = true;
+				BodyHit.enabled = true;
 				pos = new Vector3(0, 0, 0.5f);
 				if (pos.z > 0)
 				{
@@ -226,6 +229,8 @@ public class ObjectCtrl : MonoBehaviour
 				{
 					MANAGE.Return(this);
 				}
+				//Debug.Log("hand_enableed=[" + MainHit.enabled + "]");
+
 				break;
 
 
@@ -251,7 +256,7 @@ public class ObjectCtrl : MonoBehaviour
 					LIFE = 1;
 					param[0] = 0;
 				}
-				MainHit.enabled = true;
+				BodyHit.enabled = true;
 				pos = new Vector3(0, 0, 0.5f);
 				if (pos.z > 0)
 				{
@@ -302,7 +307,7 @@ public class ObjectCtrl : MonoBehaviour
 					LIFE = 1;
 					param[0] = 0;
 				}
-				MainHit.enabled = true;
+				BodyHit.enabled = true;
 				pos = new Vector3(0, 0, 0.5f);
 				if (pos.z > 0)
 				{
@@ -378,7 +383,8 @@ public class ObjectCtrl : MonoBehaviour
 
 	private void OnTriggerEnter(Collider other)
 	{
-		if (obj_mode == ObjectManager.MODE.NOHIT) return;
+		//if (obj_mode == ObjectManager.MODE.NOHIT) return;
+		//if (MAIN.mode != MainSceneCtrl.GAMEmode.PLAYING) return;
 		ObjectCtrl other_ctrl = other.gameObject.GetComponent<ObjectCtrl>();
 		string other_name = other.gameObject.GetComponent<HitName>().PARTS;
 		ObjectCtrl mine = this.gameObject.GetComponent<ObjectCtrl>();
@@ -387,49 +393,51 @@ public class ObjectCtrl : MonoBehaviour
 		{
 			mine_name = "null";
 		}
-		Debug.Log("mine_name=[" + mine_name + "] other_name=[" + other_name + "]");
-		switch(mine_name)
+		if (other_name==null)
+		{
+			other_name = "null";
+		}
+		if (other_ctrl == null)
+		{
+			return;
+		}
+
+		if (other_ctrl.gameObject.transform.localPosition.z <= 8.3f)
+		{
+			return;
+		}
+
+		//Debug.Log("mine_name=[" + mine_name + "] other_name=[" + other_name + "]");
+		switch (mine_name)
 		{
 			case "null":
 				return;
 			case "will_tkb_left":
 			case "will_tkb_right":
-				if (other_name == "tonari_niki")
-				{
-					return;
-				}
-				if (other_name == "jack")
-				{
-					return;
-				}
-				if (other_name == "will")
-				{
-					return;
-				}
-				if (other_ctrl.param[0]>0)
-				{
-					return;
-				}
+				
 				
 				//if (other_name=="hand_just")
-				if (mine.param[0]>0)
+
+				if (mine.param[0] == 0)
 				{
 					SoundManager.Instance.PlaySE(0);
 					MAIN.player_sats -=100;
+					mine.param[0]++;
 				}
-				//if (other_name=="hand_good")
+				else if (other_name=="hand_good")
 				{
+					SoundManager.Instance.PlaySE(0);
 					MAIN.player_sats -= 50;
+					mine.param[0]++;
 				}
-				if (other_name=="hand_noise")
+				else if (other_name=="hand_noise")
 				{
 					SoundManager.Instance.PlaySE(4);
 				}
-				mine.param[0]++;
 
 				break;
 			case "tonari_niki":
-				if (mine.param[0] > 0)
+				if (mine.param[0] == 0)
 				{
 					mine.param[0]++;
 					SoundManager.Instance.PlaySE(4);
@@ -437,20 +445,21 @@ public class ObjectCtrl : MonoBehaviour
 				break;
 			case "jack":
 				//if(other_name=="hand_good")
-				if (mine.param[0] > 0)
+				if (mine.param[0] == 0)
 				{
 
-					SoundManager.Instance.PlaySE(Random.Range(1, 3));
+					SoundManager.Instance.PlaySE(Random.Range(1, 4));
 					MAIN.player_sats += 1137;
 					mine.param[0]++;
 
 				}
 				break;
 			case "will_body":
-				if (mine.param[0]>0)
+				if (mine.param[0] == 0)
 				{
 					mine.param[0]++;
 					MAIN.player_sats -= 100;
+					SoundManager.Instance.PlaySE(0);
 				}
 				break;
 #if false

@@ -54,6 +54,7 @@ public sealed class ObjectManager : MonoBehaviour {
 		DEAD,               // 死亡アニメ.
 		FINISH,             // 最終処理.
 	}
+
 	public enum TYPE    // 処理タイプ(当たり判定有無を大雑把に仕分け).
 	{
 		NOUSE = 0,          // 未使用.

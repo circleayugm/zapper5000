@@ -27,7 +27,7 @@ public class MainSceneCtrl : MonoBehaviour
 
     // uGUI•\Ž¦
 
-    enum MODE
+    public enum GAMEmode
     {
         DEMO,
         PLAYING,
@@ -53,20 +53,21 @@ public class MainSceneCtrl : MonoBehaviour
 
 
     int count = 0;
-    MODE mode = MODE.DEMO;
+    public GAMEmode mode = GAMEmode.DEMO;
 
+	string msg_send = "";
 
-
-    string msg_send = "";
-
-    public int player_sats = 10000;
+    public int player_sats = SATS_START;
+    int final_sats = SATS_START;
     int player_time = 0;
 
     ObjectManager.TYPE type = ObjectManager.TYPE.WILL;
     Vector3 pos = new Vector3(0, 0, 0);
 
-    // Start is called before the first frame update
-    void Start()
+
+
+	// Start is called before the first frame update
+	void Start()
     {
         Application.targetFrameRate = 60;
         MAIN = GameObject.Find("root_game").GetComponent<MainSceneCtrl>();
@@ -74,6 +75,7 @@ public class MainSceneCtrl : MonoBehaviour
         ROOT_START.gameObject.SetActive(false);
         OBJ_PLAYER.gameObject.SetActive(false);
         INP_COPY.gameObject.SetActive(false);
+        SoundManager.Instance.volume.SE = 0.0f;
         while (MANAGE.SW_BOOT == false)
         {
 
@@ -85,7 +87,7 @@ public class MainSceneCtrl : MonoBehaviour
     {
         switch (mode)
         {
-            case MODE.DEMO:
+            case GAMEmode.DEMO:
                 if (count == 0)
                 {
                     ROOT_START.gameObject.SetActive(true);
@@ -122,17 +124,20 @@ public class MainSceneCtrl : MonoBehaviour
                 {
                     INP_COPY.gameObject.SetActive(false);
                     ROOT_START.gameObject.SetActive(false);
-                    mode = MODE.PLAYING;
+                    mode = GAMEmode.PLAYING;
                     count = -1;
+                    SoundManager.Instance.StopSE();
+                    SoundManager.Instance.volume.SE = 1.0f;
                 }
 
                 break;
-            case MODE.PLAYING:
+            case GAMEmode.PLAYING:
                 {
                     if (count == 0)
                     {
                         player_time = 0;
                         player_sats = SATS_START;
+                        final_sats = SATS_START;
                         OBJ_PLAYER.gameObject.SetActive(true);
                         OBJ_HAND.Set();
                         MANAGE.ResetAll();
@@ -167,38 +172,48 @@ public class MainSceneCtrl : MonoBehaviour
                     }
 
                     player_time = count;
+                    final_sats = player_sats;
                     if (player_sats > 100000)
                     {
                         OBJ_PLAYER.gameObject.SetActive(false);
                         OBJ_HAND.Reset();
-                        mode = MODE.OVER;
+                        mode = GAMEmode.OVER;
                     }
                     if (player_sats <= 0)
                     {
                         OBJ_PLAYER.gameObject.SetActive(false);
                         OBJ_HAND.Reset();
-                        mode = MODE.OVER;
+                        mode = GAMEmode.OVER;
+                    }
+                    if (count == 10800)
+                    {
+                        OBJ_PLAYER.gameObject.SetActive(false);
+                        OBJ_HAND.Reset();
+                        mode = GAMEmode.OVER;
                     }
                 }
                 break;
-            case MODE.OVER:
+            case GAMEmode.OVER:
                 {
                     if (count == 0)
                     {
                         if (player_sats <= 0)
                         {
-                            msg_send = "CLEAR TIME=" + (player_time / 3600).ToString("D4") + ":" + ((player_time / 60) % 60).ToString("D2") + "." + timer_msec[player_time % 60].ToString("D2") + " / https://howto_nostr.info/zapper5000";
+                            msg_send = "CLEAR TIME=" + (player_time / 3600).ToString("D4") + ":" + ((player_time / 60) % 60).ToString("D2") + "." + timer_msec[player_time % 60].ToString("D2") + " / https://howto_nostr.info/zapper5000/";
                         }
                         else
                         {
-                            msg_send = "Success! / https://howto-nostr.info/zapper5000";
+                            msg_send = "Success! / https://howto-nostr.info/zapper5000/";
                         }
                         INP_COPY.text = msg_send;
                         INP_COPY.gameObject.SetActive(true);
                     }
-                    if (count > 60)
+                    if (count > 90)
                     {
-                        mode = MODE.DEMO;
+                        mode = GAMEmode.DEMO;
+                        SoundManager.Instance.StopSE();
+                        SoundManager.Instance.volume.SE = 1.0f;
+
                         count = -1;
                     }
                     break;
@@ -215,7 +230,7 @@ public class MainSceneCtrl : MonoBehaviour
         count++;
 
         MSG_TIME.text = "TIME=" + (player_time / 3600).ToString("D4") + ":" + ((player_time / 60) % 60).ToString("D2") + "." + timer_msec[player_time % 60].ToString("D2");
-        MSG_SATS.text = "Sats=" + player_sats;
+        MSG_SATS.text = "Sats=" + final_sats;
 
     }
 }
