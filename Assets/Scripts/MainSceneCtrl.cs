@@ -117,7 +117,7 @@ public class MainSceneCtrl : MonoBehaviour
                             type = ObjectManager.TYPE.WILL;
                             break;
                     }
-                    MANAGE.Set(type, 0, new Vector3(Random.Range(3.5f, 3.5f), Random.Range(-1.0f, 1.0f), 30), 0, 0);
+                    MANAGE.Set(type, 0, new Vector3(Random.Range(-3.5f, 3.5f), Random.Range(-1.0f, 1.0f), 30), 0, 0);
                 }
                 // スタート待ち
                 if (Input.GetKeyDown(KeyCode.Space) == true)
@@ -204,7 +204,7 @@ public class MainSceneCtrl : MonoBehaviour
                     {
                         if (player_sats <= 0)
                         {
-                            msg_send = "CLEAR TIME=" + (player_time / 3600).ToString("D4") + ":" + ((player_time / 60) % 60).ToString("D2") + "." + timer_msec[player_time % 60].ToString("D2") + " / https://howto_nostr.info/zapper5000/";
+                            msg_send = "CLEAR TIME=" + (player_time / 3600).ToString("D4") + ":" + ((player_time / 60) % 60).ToString("D2") + "." + timer_msec[player_time % 60].ToString("D2") + " / https://howto-nostr.info/zapper5000/";
                         }
                         else if (player_sats >= 100000)
                         {
