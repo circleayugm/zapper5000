@@ -24,19 +24,18 @@ public class SoundHeader
 	//曲列挙.
 	public enum BGM
 	{
-		GAME_PLAY=0,
-		CLEAR,
-		Count
+		BGM_MAX
 	}
 
 	//SE列挙.
 	public enum SE
 	{
-		SHOOT=0,
-		DESTROY_FIRE1,
-		DESTROY_FIRE2,
-		CREATE_FIRE,
-		Count
+		WILL_ZAP=0,
+  JACK,
+  OSTRICH1,
+  OSTRICH2,
+  TONARI_NIKi,
+  SE_MAX
 	}
 		
 	//音声列挙.
