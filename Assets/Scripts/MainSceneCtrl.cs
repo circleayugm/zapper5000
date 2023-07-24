@@ -46,7 +46,7 @@ public class MainSceneCtrl : MonoBehaviour
         80,81,83,85,87,89,
         90,92,94,96,98,99
     };
-    static int SATS_START = 1000;   // スタート時の資産
+    static int SATS_START = 10000;   // スタート時の資産
 
 
 
@@ -91,8 +91,6 @@ public class MainSceneCtrl : MonoBehaviour
                 if (count == 0)
                 {
                     ROOT_START.gameObject.SetActive(true);
-                    INP_COPY.gameObject.SetActive(true);
-                    INP_COPY.text = msg_send;
                 }
 
                 if (((count) % 50) == 0)
@@ -208,15 +206,21 @@ public class MainSceneCtrl : MonoBehaviour
                         {
                             msg_send = "CLEAR TIME=" + (player_time / 3600).ToString("D4") + ":" + ((player_time / 60) % 60).ToString("D2") + "." + timer_msec[player_time % 60].ToString("D2") + " / https://howto_nostr.info/zapper5000/";
                         }
-                        else
+                        else if (player_sats >= 100000)
                         {
                             msg_send = "Success! You are Rich! / https://howto-nostr.info/zapper5000/";
+                        }
+                        else
+                        {
+                            msg_send = "Time up! Thank you for your playing! / https://howto-nostr.info/zapper5000/";
                         }
                     }
                     if (count > 90)
                     {
                         mode = GAMEmode.DEMO;
                         SoundManager.Instance.StopSE();
+                        INP_COPY.gameObject.SetActive(true);
+                        INP_COPY.text = msg_send;
 
                         count = -1;
                     }

@@ -403,19 +403,20 @@ public sealed class ObjectManager : MonoBehaviour {
 							)
 						{
 							// WILLさん当たり
-							Debug.Log("Willさん当たり・count=" + obj.count + " / hit=" + objectUsed[i].obj_type + " / check1=" + check1 + " / check2=" + check2);
-						
-								if (objectUsed[i].param[0] == 0)
-								{
-									ROOT_MAIN.player_sats -= 150;
-									objectUsed[i].param[0]++;
-								}
-								else if (objectUsed[i].param[1] == 0)
-								{
-									ROOT_MAIN.player_sats -= 350;
-									objectUsed[i].param[1]++;
-								}
-							
+							//Debug.Log("Willさん当たり・count=" + obj.count + " / hit=" + objectUsed[i].obj_type + " / check1=" + check1 + " / check2=" + check2);
+
+							if (objectUsed[i].param[0] == 0)
+							{
+								ROOT_MAIN.player_sats -= 150;
+								objectUsed[i].param[0]++;
+								SoundManager.Instance.PlaySE((int)SoundHeader.SE.WILL_ZAP);
+							}
+							else if (objectUsed[i].param[1] == 0)
+							{
+								ROOT_MAIN.player_sats -= 350;
+								objectUsed[i].param[1]++;
+							}
+
 						}
 					}
 				}
@@ -433,6 +434,18 @@ public sealed class ObjectManager : MonoBehaviour {
 							)
 						{
 							// 隣ニキ当たり
+							//Debug.Log("隣ニキ当たり・count=" + obj.count + " / hit=" + objectUsed[i].obj_type + " / check1=" + check1 + " / check2=" + check2);
+
+							if (objectUsed[i].param[0] == 0)
+							{
+								//ROOT_MAIN.player_sats -= 150;
+								objectUsed[i].param[0]++;
+								SoundManager.Instance.PlaySE((int)SoundHeader.SE.TONARI_NIKi);
+							}
+							else if (objectUsed[i].param[1] == 0)
+							{
+								objectUsed[i].param[1]++;
+							}
 						}
 					}
 				}
@@ -452,6 +465,19 @@ public sealed class ObjectManager : MonoBehaviour {
 								)
 							{
 								// jackさん当たり
+								//Debug.Log("jackさん当たり・count=" + obj.count + " / hit=" + objectUsed[i].obj_type + " / check1=" + check1 + " / check2=" + check2);
+
+								if (objectUsed[i].param[0] == 0)
+								{
+									objectUsed[i].param[0]++;
+								}
+								else if (objectUsed[i].param[1] == 0)
+								{
+									SoundManager.Instance.PlaySE(Random.Range(0, 3) + 1);
+									ROOT_MAIN.player_sats += 1137;
+									objectUsed[i].param[1]++;
+								}
+
 							}
 						}
 					}
