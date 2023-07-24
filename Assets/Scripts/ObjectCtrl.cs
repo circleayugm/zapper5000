@@ -153,7 +153,7 @@ public class ObjectCtrl : MonoBehaviour
 					
 					MainHit.GetComponent<HitName>().PARTS = "hand_just";
 					MainHit2.GetComponent<HitName>().PARTS = "hand_good";
-					MainHit3.GetComponent<HitName>().PARTS = "hand_noise";
+					//MainHit3.GetComponent<HitName>().PARTS = "hand_noise";
 
 					MainPic.enabled = true;
 
@@ -161,17 +161,21 @@ public class ObjectCtrl : MonoBehaviour
 				}
 				MainHit.enabled = true;
 				MainHit2.enabled = true;
-				MainHit3.enabled = true;
+				//MainHit3.enabled = true;
 				param[0] = 0;
 				Vector3 inp = new Vector3(0, 0, 0);
 				pos = this.transform.localPosition;
 				inp.x = Input.GetAxis("Horizontal");
 				inp.y = Input.GetAxis("Vertical");
-				if (Mathf.Abs(pos.x + inp.x) > 8.0f)
+				if (Mathf.Abs(pos.x + inp.x) > 10.0f)
 				{
 					inp.x = 0.0f;
 				}
-				if (Mathf.Abs(pos.y + inp.y) > 2.5f)
+				if ((pos.y + inp.y) > 6.5f)
+				{
+					inp.y = 0.0f;
+				}
+				else if ((pos.y + inp.y) < -2.5f)
 				{
 					inp.y = 0.0f;
 				}
@@ -196,6 +200,7 @@ public class ObjectCtrl : MonoBehaviour
 					MainHit2.GetComponent<HitName>().PARTS = "will_tkb_right";
 
 					param[0] = 0;
+					param[1] = 0;
 
 					NOHIT = false;
 					MainPic.color = COLOR_NORMAL;
@@ -213,7 +218,7 @@ public class ObjectCtrl : MonoBehaviour
 				}
 				this.transform.localPosition -= pos;
 
-				if (param[0] > 0)
+				if (param[0] + param[1] > 0)
 				{
 					if (((count >> 1) % 2) == 0)
 					{
@@ -255,6 +260,7 @@ public class ObjectCtrl : MonoBehaviour
 					power = 1;
 					LIFE = 1;
 					param[0] = 0;
+					param[1] = 0;
 				}
 				BodyHit.enabled = true;
 				pos = new Vector3(0, 0, 0.5f);
@@ -264,7 +270,7 @@ public class ObjectCtrl : MonoBehaviour
 				}
 				this.transform.localPosition -= pos;
 
-				if (param[0] > 0)
+				if (param[0] + param[1] > 0)
 				{
 					if (((count >> 1) % 2) == 0)
 					{
@@ -306,6 +312,7 @@ public class ObjectCtrl : MonoBehaviour
 					power = 1;
 					LIFE = 1;
 					param[0] = 0;
+					param[1] = 0;
 				}
 				BodyHit.enabled = true;
 				pos = new Vector3(0, 0, 0.5f);
@@ -314,7 +321,7 @@ public class ObjectCtrl : MonoBehaviour
 					pos.z = 0.15f;
 				}
 
-				if (param[0] > 0)
+				if (param[0] + param[1] > 0)
 				{
 					if (((count >> 1) % 2) == 0)
 					{
@@ -370,7 +377,7 @@ public class ObjectCtrl : MonoBehaviour
 		}
 
 		// 自前衝突判定を使う場合
-		//MANAGE.CheckHit(this);
+		MANAGE.CheckHit(this);
 
 		if (LIFE <= 0)	// 死亡確認
 		{
@@ -380,11 +387,11 @@ public class ObjectCtrl : MonoBehaviour
 		count++;
 	}
 
-
+#if false
 	private void OnTriggerEnter(Collider other)
 	{
 		//if (obj_mode == ObjectManager.MODE.NOHIT) return;
-		//if (MAIN.mode != MainSceneCtrl.GAMEmode.PLAYING) return;
+		if (MAIN.mode != MainSceneCtrl.GAMEmode.PLAYING) return;
 		ObjectCtrl other_ctrl = other.gameObject.GetComponent<ObjectCtrl>();
 		string other_name = other.gameObject.GetComponent<HitName>().PARTS;
 		ObjectCtrl mine = this.gameObject.GetComponent<ObjectCtrl>();
@@ -402,12 +409,12 @@ public class ObjectCtrl : MonoBehaviour
 			return;
 		}
 
-		if (other_ctrl.gameObject.transform.localPosition.z <= 8.3f)
+		if (other_ctrl.gameObject.transform.localPosition.z <= -8.3f)
 		{
-			return;
+			return;	
 		}
 
-		//Debug.Log("mine_name=[" + mine_name + "] other_name=[" + other_name + "]");
+		Debug.Log("count="+count+" / mine_name=[" + mine_name + " "+this.transform.localPosition+"] other_name=[" + other_name +" "+other_ctrl.transform.localPosition+ "]");
 		switch (mine_name)
 		{
 			case "null":
@@ -462,7 +469,7 @@ public class ObjectCtrl : MonoBehaviour
 					SoundManager.Instance.PlaySE(0);
 				}
 				break;
-#if false
+
 
 			case "hand_just":
 				switch(other_name)
@@ -496,11 +503,11 @@ public class ObjectCtrl : MonoBehaviour
 				break;
 			case "hand_good":
 				break;
-#endif
+
 		}
 	}
 
-
+#endif
 
 
 

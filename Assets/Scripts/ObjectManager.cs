@@ -42,6 +42,8 @@ public sealed class ObjectManager : MonoBehaviour {
 	[Space]
 	[SerializeField]
 	public Camera CAMERA_ROOT;
+	[SerializeField]
+	MainSceneCtrl ROOT_MAIN;
 
 	public int LIMIT = 70;             // キャラクタ表示総数.
 
@@ -58,11 +60,12 @@ public sealed class ObjectManager : MonoBehaviour {
 	public enum TYPE    // 処理タイプ(当たり判定有無を大雑把に仕分け).
 	{
 		NOUSE = 0,          // 未使用.
-		TONARI_NIKI,		// 隣ニキ手と配線
-		WILL,		        // Willさん
-		JACK,				// jack
-		TONARI_NIKI_HAND,	// 隣ニキ
-		NOHIT_EFFECT,		// 爆風
+		TONARI_NIKI,        // 隣ニキ手と配線
+		WILL,               // Willさん
+		JACK,               // jack
+		TONARI_NIKI_HAND,   // 隣ニキ
+		TONARI_NIKI_HIT,    // 隣ニキ当たり
+		NOHIT_EFFECT,       // 爆風
 	}
 
 	public readonly Vector3 OBJECT_DISPLAY_LIMIT = new Vector3((272 * 3) / 2, (480 * 3) / 2, 0);
@@ -74,7 +77,7 @@ public sealed class ObjectManager : MonoBehaviour {
 	public int objectStockMax = 700;
 	public int objectUsedMax = 0;
 
-	public bool SW_BOOT = false;		// 動作準備が整った時true
+	public bool SW_BOOT = false;        // 動作準備が整った時true
 #if false
 
 	public readonly int WATER_MAX = 1000;	// 水最大値
@@ -95,7 +98,7 @@ public sealed class ObjectManager : MonoBehaviour {
 		objectUsedMax = 0;
 		for (int i = 0; i < ang256.Length; i++)
 		{
-			ang256[i] = (90-(360.0f / 256.0f) * i);
+			ang256[i] = (90 - (360.0f / 256.0f) * i);
 		}
 		for (int i = 0; i < LIMIT; i++)
 		{
@@ -111,7 +114,7 @@ public sealed class ObjectManager : MonoBehaviour {
 
 
 
-	
+
 
 	/// <summary>
 	///		初期設定；オブジェクトの前準備
@@ -144,7 +147,7 @@ public sealed class ObjectManager : MonoBehaviour {
 	/// <param name="angle">角度</param>
 	/// <param name="speed">速度</param>
 	/// <returns>キャラクタ設定を終えたオブジェクト</returns>
-	public ObjectCtrl Set(TYPE type, int mode,Vector3 pos, int angle, int speed)
+	public ObjectCtrl Set(TYPE type, int mode, Vector3 pos, int angle, int speed)
 	{
 		if (objectStock.Count == 0)
 		{
@@ -153,7 +156,7 @@ public sealed class ObjectManager : MonoBehaviour {
 		ObjectCtrl obj;
 		obj = objectStock[0];
 		objectStockMax--;
-		objectStock.RemoveAt(0);	// ここまで「ストックから取り出し」処理.
+		objectStock.RemoveAt(0);    // ここまで「ストックから取り出し」処理.
 
 		obj.mode = mode;            // オブジェクト設定.
 		obj.angle = angle;
@@ -170,7 +173,7 @@ public sealed class ObjectManager : MonoBehaviour {
 		obj.transform.localEulerAngles = new Vector3(0, 0, 0);
 		obj.interval = 0;
 		obj.enabled = true;
-		for (int i=0;i<obj.param.Length;i++)
+		for (int i = 0; i < obj.param.Length; i++)
 		{
 			obj.param[i] = 0;
 		}
@@ -304,7 +307,7 @@ public sealed class ObjectManager : MonoBehaviour {
 	/// <param name="target">相手の位置</param>
 	/// <returns>ラジアン角</returns>
 	//-------------------------------------------------------------------
-	public float GetRad(Vector3 mine,Vector3 target)
+	public float GetRad(Vector3 mine, Vector3 target)
 	{
 		return Mathf.Atan2(target.y - mine.y,
 							target.x - mine.x
@@ -342,7 +345,7 @@ public sealed class ObjectManager : MonoBehaviour {
 	public int RotationToAngle(float rot)
 	{
 		float r = rot;
-		if (r<=180.0f)
+		if (r <= 180.0f)
 		{
 			r = 360.0f - r;
 		}
@@ -363,4 +366,104 @@ public sealed class ObjectManager : MonoBehaviour {
 	{
 		CAMERA_ROOT.transform.localPosition = new Vector3(0, 0, -10) + (mine / 1.5f);
 	}
+
+
+
+
+
+	//-------------------------------------------------------------------
+	/// <summary>
+	///		当たり判定部・Unityの衝突判定を使わない版
+	///		Unityの当たり判定を使うと処理順序が狂うので独自実装
+	/// </summary>
+	/// <param name="obj">対象のオブジェクト</param>
+	//-------------------------------------------------------------------
+	public void CheckHit(ObjectCtrl obj)
+	{
+		if (objectUsed.Count == 0)
+		{
+			return;
+		}
+		if (obj.obj_type == TYPE.TONARI_NIKI_HIT)
+		{
+			for (int i = 0; i < objectUsed.Count; i++)
+			{
+
+				if (objectUsed[i].obj_type == TYPE.WILL)
+				{
+					float xx = objectUsed[i].transform.localPosition.x - obj.transform.localPosition.x;
+					float yy = objectUsed[i].transform.localPosition.y - obj.transform.localPosition.y;
+					float check1 = (xx * xx) + (yy * yy);
+					float check2 = (objectUsed[i].BodyHit.size.x * objectUsed[i].transform.localScale.x) + (obj.MainHit.radius * obj.transform.localScale.x);
+					if (check1 <= (check2 * check2))
+					{
+						if (
+								(objectUsed[i].transform.localPosition.z < -4.0f)
+							&& (objectUsed[i].transform.localPosition.z > -8.3f)
+							)
+						{
+							// WILLさん当たり
+							Debug.Log("Willさん当たり・count=" + obj.count + " / hit=" + objectUsed[i].obj_type + " / check1=" + check1 + " / check2=" + check2);
+						
+								if (objectUsed[i].param[0] == 0)
+								{
+									ROOT_MAIN.player_sats -= 150;
+									objectUsed[i].param[0]++;
+								}
+								else if (objectUsed[i].param[1] == 0)
+								{
+									ROOT_MAIN.player_sats -= 350;
+									objectUsed[i].param[1]++;
+								}
+							
+						}
+					}
+				}
+				else if (objectUsed[i].obj_type == TYPE.TONARI_NIKI)
+				{
+					float xx = objectUsed[i].transform.localPosition.x - obj.transform.localPosition.x;
+					float yy = objectUsed[i].transform.localPosition.y - obj.transform.localPosition.y;
+					float check1 = (xx * xx) + (yy * yy);
+					float check2 = (objectUsed[i].BodyHit.size.x * objectUsed[i].transform.localScale.x) + (obj.MainHit.radius * obj.transform.localScale.x);
+					if (check1 <= (check2 * check2))
+					{
+						if (
+								(objectUsed[i].transform.localPosition.z < -4.0f)
+							&& (objectUsed[i].transform.localPosition.z > -8.3f)
+							)
+						{
+							// 隣ニキ当たり
+						}
+					}
+				}
+				else if (objectUsed[i].obj_type == TYPE.JACK)
+				{
+					//if (objectUsed[i].obj_type == TYPE.WALL)
+					{
+						float xx = objectUsed[i].transform.localPosition.x - obj.transform.localPosition.x;
+						float yy = objectUsed[i].transform.localPosition.y - obj.transform.localPosition.y;
+						float check1 = (xx * xx) + (yy * yy);
+						float check2 = (objectUsed[i].BodyHit.size.x * objectUsed[i].transform.localScale.x) + (obj.MainHit.radius * obj.transform.localScale.x);
+						if (check1 <= (check2 * check2))
+						{
+							if (
+									(objectUsed[i].transform.localPosition.z < -4.0f)
+								&& (objectUsed[i].transform.localPosition.z > -8.3f)
+								)
+							{
+								// jackさん当たり
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+
+
+
 }
+
+
+
+

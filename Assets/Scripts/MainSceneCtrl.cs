@@ -46,7 +46,7 @@ public class MainSceneCtrl : MonoBehaviour
         80,81,83,85,87,89,
         90,92,94,96,98,99
     };
-    static int SATS_START = 10000;   // スタート時の資産
+    static int SATS_START = 1000;   // スタート時の資産
 
 
 
@@ -91,6 +91,8 @@ public class MainSceneCtrl : MonoBehaviour
                 if (count == 0)
                 {
                     ROOT_START.gameObject.SetActive(true);
+                    INP_COPY.gameObject.SetActive(true);
+                    INP_COPY.text = msg_send;
                 }
 
                 if (((count) % 50) == 0)
@@ -117,7 +119,7 @@ public class MainSceneCtrl : MonoBehaviour
                             type = ObjectManager.TYPE.WILL;
                             break;
                     }
-                    MANAGE.Set(type, 0, new Vector3(Random.Range(0, 9) - 4, Random.Range(0, 2) - 1, 30), 0, 0);
+                    MANAGE.Set(type, 0, new Vector3(Random.Range(3.5f, 3.5f), Random.Range(-1.0f, 1.0f), 30), 0, 0);
                 }
                 // スタート待ち
                 if (Input.GetKeyDown(KeyCode.Space) == true)
@@ -167,7 +169,7 @@ public class MainSceneCtrl : MonoBehaviour
                                 type = ObjectManager.TYPE.WILL;
                                 break;
                         }
-                        MANAGE.Set(type, 0, new Vector3(Random.Range(0, 9) - 4, Random.Range(0, 2) - 1, 30), 0, 0);
+                        MANAGE.Set(type, 0, new Vector3(Random.Range(-3.5f, 3.5f), Random.Range(-1.0f, 1.0f), 30), 0, 0);
                         //MANAGE.Set(type, 0, new Vector3(0,0, 30), 0, 0);
                     }
 
@@ -178,18 +180,23 @@ public class MainSceneCtrl : MonoBehaviour
                         OBJ_PLAYER.gameObject.SetActive(false);
                         OBJ_HAND.Reset();
                         mode = GAMEmode.OVER;
+                        count = -1;
                     }
                     if (player_sats <= 0)
                     {
                         OBJ_PLAYER.gameObject.SetActive(false);
                         OBJ_HAND.Reset();
                         mode = GAMEmode.OVER;
+                        player_sats = 0;
+                        final_sats = 0;
+                        count = -1;
                     }
                     if (count == 10800)
                     {
                         OBJ_PLAYER.gameObject.SetActive(false);
                         OBJ_HAND.Reset();
                         mode = GAMEmode.OVER;
+                        count = -1;
                     }
                 }
                 break;
@@ -203,16 +210,13 @@ public class MainSceneCtrl : MonoBehaviour
                         }
                         else
                         {
-                            msg_send = "Success! / https://howto-nostr.info/zapper5000/";
+                            msg_send = "Success! You are Rich! / https://howto-nostr.info/zapper5000/";
                         }
-                        INP_COPY.text = msg_send;
-                        INP_COPY.gameObject.SetActive(true);
                     }
                     if (count > 90)
                     {
                         mode = GAMEmode.DEMO;
                         SoundManager.Instance.StopSE();
-                        SoundManager.Instance.volume.SE = 1.0f;
 
                         count = -1;
                     }
