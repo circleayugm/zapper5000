@@ -306,6 +306,7 @@ public class ObjectCtrl : MonoBehaviour
 					this.gameObject.GetComponent<HitName>().PARTS = "jack";
 					MainHit.enabled = true;
 					MainHit.radius = 0.4f;
+					BodyHit.size = new Vector3(0.5f, 0.5f, 0.2f);
 					NOHIT = false;
 					MainPic.color = COLOR_NORMAL;
 					MainPic.sortingOrder = 1;
